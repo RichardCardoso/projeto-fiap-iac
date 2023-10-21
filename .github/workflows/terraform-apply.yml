@@ -52,7 +52,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     
-    - name: Trigger Infrastructure Deploy Workflow
+    - name: Application deploy
       uses: benc-uk/workflow-dispatch@v1
       with:
         ref: refs/heads/main
