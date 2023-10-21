@@ -46,6 +46,7 @@ jobs:
           comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
 
   app:
+    name: "Deploy app"
     runs-on: ubuntu-latest
     needs: terraform
     steps:
