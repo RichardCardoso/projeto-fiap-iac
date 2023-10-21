@@ -44,3 +44,18 @@ jobs:
         with:
           run: ${{ steps.apply-run.outputs.run_id }}
           comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+
+  app:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Trigger Infrastructure Deploy Workflow
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        ref: refs/heads/main
+        workflow: kubernetes-deploy.yml
+        token: ${{ secrets.PAT }}  # Personal Access Token with repo scope
+        repo: richard-cardosodev/projeto-fiap-application
+        #inputs: '{"message": "Triggered from infrastructure deployment workflow"}'
