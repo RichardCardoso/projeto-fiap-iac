@@ -2,7 +2,10 @@ name: "Terraform Plan"
 
 on:
   pull_request:
-
+  
+env:
+  TF_TOKEN_app_terraform_io: "${{ secrets.TF_API_TOKEN }}"
+  
 jobs:
   terraform:
     name: "Terraform Plan"
@@ -12,9 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Export Terraform Api Token
-        run: echo "TF_TOKEN_app_terraform_io=${{ secrets.TF_API_TOKEN }}" >> $GITHUB_ENV
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
