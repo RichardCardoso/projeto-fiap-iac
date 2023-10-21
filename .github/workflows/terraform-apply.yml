@@ -14,6 +14,7 @@ env:
 
 jobs:
   terraform:
+    if: github.repository != 'hashicorp-education/learn-terraform-github-actions'
     name: "Terraform Apply"
     runs-on: ubuntu-latest
     permissions:
@@ -35,15 +36,8 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
-      
-  application:
-    needs: terraform
-    name: "Kubernetes Deploy Workflow Trigger"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Call Trigger
+
+      - name: Apply
         uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.0.0
         if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
         id: apply
