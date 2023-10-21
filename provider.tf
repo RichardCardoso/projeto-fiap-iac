@@ -1,6 +1,6 @@
 terraform {
   cloud {
-      organization = projeto-fiap-64"
+      organization = "projeto-fiap-64"
       workspaces {
         name = "projeto-fiap-iac-infra"
       }
