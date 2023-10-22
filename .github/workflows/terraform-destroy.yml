@@ -57,7 +57,7 @@ jobs:
       run: terraform init
 
     - name: Terraform Plan
-      run: terraform plan -input=false
+      run: terraform plan -destroy -input=false
 
     - name: Terraform Destroy
       run: terraform destroy -auto-approve -input=false
