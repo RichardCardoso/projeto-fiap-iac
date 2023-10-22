@@ -1,14 +1,9 @@
 terraform {
-  cloud {
-      organization = "projeto-fiap-64"
-      workspaces {
-        name = "projeto-fiap-iac-infra"
-      }
-    }
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.12.1"
+  backend "remote" {
+    organization = "projeto-fiap-64"
+
+    workspaces {
+      name = "projeto-fiap-iac-infra"
     }
   }
 }
