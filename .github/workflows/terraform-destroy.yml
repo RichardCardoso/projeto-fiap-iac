@@ -35,7 +35,7 @@ jobs:
       run:  |
             aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
 
-    - name: Deploy to kubernetes cluster
+    - name: Delete kubernetes cluster deployment
       run:  |
             kubectl delete -f ./kubernetes
 
