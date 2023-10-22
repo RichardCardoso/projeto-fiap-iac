@@ -106,4 +106,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        subhead: "Endereço para acesso: ${{ env.EXTERNAL_IP }}/swagger-ui/index.html#/"
+        subhead: "Endereço para acesso: ${{ env.EXTERNAL_HOSTNAME }}/swagger-ui/index.html#/"
