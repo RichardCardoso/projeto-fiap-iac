@@ -110,7 +110,7 @@ jobs:
         curl -L \
             -X PATCH \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.GH_API_TOKEN }}" \
             "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME" \
             -d "{\"name\": \"$REPO_NAME\", \"description\": \"$DESCRIPTION\", \"homepage\": \"$WEBSITE_URL\"}"
       env:
