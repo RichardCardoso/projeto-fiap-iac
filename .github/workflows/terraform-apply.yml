@@ -100,7 +100,7 @@ jobs:
             echo "Waiting for External hostname..."
             sleep 10
         done
-    - name: Update repository description and website URL
+    - name: Set repository website URL
       run: |
         WEBSITE_URL="http://$EXTERNAL_HOSTNAME/swagger-ui/index.html#/"
         REPO_OWNER=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f1)
