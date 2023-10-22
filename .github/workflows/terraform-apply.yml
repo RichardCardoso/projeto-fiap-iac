@@ -100,10 +100,18 @@ jobs:
             echo "Waiting for External hostname..."
             sleep 10
         done
-    - name: Update readme.md
-      id: update-readme
-      uses: theboi/github-update-readme@v1.0
+    - name: Update repository description and website URL
+      run: |
+        DESCRIPTION="Endereço para acesso: $EXTERNAL_IP/swagger-ui/index.html#/"
+        WEBSITE_URL="http://$EXTERNAL_IP/swagger-ui/index.html#/"
+        REPO_OWNER=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f1)
+        REPO_NAME=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f2)
+
+        curl -X PATCH \
+             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+             -H "Accept: application/vnd.github.v3+json" \
+             -d "{\"name\": \"$REPO_NAME\", \"description\": \"$DESCRIPTION\", \"homepage\": \"$WEBSITE_URL\"}" \
+             "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        subhead: "Endereço para acesso: ${{ env.EXTERNAL_HOSTNAME }}/swagger-ui/index.html#/"
+        EXTERNAL_IP: ${{ env.EXTERNAL_IP }}
+
