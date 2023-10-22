@@ -77,8 +77,8 @@ jobs:
       run:  |
             kubectl apply -f ./kubernetes
 
-    - name: Wait for External IP
-      id: wait-for-external-ip
+    - name: Wait for External Hostname
+      id: wait-for-external-hostname
       run: |
         SERVICE_NAME="lb-app-projetofiap"
         NAMESPACE="default"
@@ -87,17 +87,17 @@ jobs:
         end=$((SECONDS+600))
 
         while true; do
-            IP=$(kubectl get svc $SERVICE_NAME -n $NAMESPACE -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-            if [[ ! -z $IP ]]; then
-                echo "External IP assigned: $IP"
-                echo "EXTERNAL_IP=$IP" >> $GITHUB_ENV
+            HOSTNAME=$(kubectl get svc $SERVICE_NAME -n $NAMESPACE -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+            if [[ ! -z $HOSTNAME ]]; then
+                echo "External hostname assigned: $HOSTNAME"
+                echo "EXTERNAL_HOSTNAME=$HOSTNAME" >> $GITHUB_ENV
                 break
             fi
             if [[ $SECONDS -ge $end ]]; then
-                echo "Timed out waiting for External IP assignment."
+                echo "Timed out waiting for External hostname assignment."
                 exit 1
             fi
-            echo "Waiting for External IP..."
+            echo "Waiting for External hostname..."
             sleep 10
         done
     - name: Update readme.md
