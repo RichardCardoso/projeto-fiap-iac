@@ -79,7 +79,7 @@ jobs:
               body: output
             });
 
-  deploy-app:
+  kubernetes-validation:
     needs: terraform
     runs-on: ubuntu-latest
     env:
