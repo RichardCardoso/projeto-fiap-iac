@@ -21,3 +21,7 @@ variable "region" {
 variable "kubernetes_version" {
   default = 1.28
 }
+
+variable "lambda_name" {
+  default = "projeto-fiap-authorizer"
+}

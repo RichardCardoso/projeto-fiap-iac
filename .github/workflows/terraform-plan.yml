@@ -21,6 +21,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Lambda Repo Code Zip
+        env:
+          LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
+        run:  |
+              git clone $LAMBDA_REPO_URL
+              REPO_NAME=$(echo "$LAMBDA_REPO_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
+              cd $REPO_NAME
+              ls
+              zip ../deployment.zip *.mjs
+
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
         id: plan-upload
