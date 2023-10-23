@@ -26,7 +26,7 @@ jobs:
               git clone ${{ vars.LAMBDA_REPO_URL }}
               REPO_NAME=$(echo "${{ vars.LAMBDA_REPO_URL }}" | awk -F'/' '{print $NF}' | cut -d. -f1)
               ls
-              zip deployment.zip $REPO_NAME/*.mjs
+              zip deployment.zip ./$REPO_NAME/*.mjs
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
