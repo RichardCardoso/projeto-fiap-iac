@@ -23,12 +23,12 @@ jobs:
 
       - name: Lambda Repo Clone
         run:  |
-              git clone ${{ vars.LAMBDA_REPO_URL }} ./lambda-code
-              ls -l ./lambda-code
+              git clone ${{ vars.LAMBDA_REPO_URL }} lambda-code
       
       - name: Create zip file
         run:  |
-              zip deployment.zip ./lambda-code/*.mjs
+              zip deployment.zip lambda-code/*.mjs
+              ls -l lambda-code
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
