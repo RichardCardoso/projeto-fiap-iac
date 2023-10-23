@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "terraform_lambda" {
   function_name = var.lambda_name
 
-  filename = "lambda.zip"
+  filename = "deployment.zip"
 
   handler = "index.handler"
   role    = "${aws_iam_role.iam_for_lambda.arn}"
