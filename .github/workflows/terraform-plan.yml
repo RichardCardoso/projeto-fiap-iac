@@ -23,7 +23,7 @@ jobs:
 
       - name: Lambda Repo Code Zip
         env:
-          LAMBDA_REPO_URL: ${{ secrets.LAMBDA_REPO_URL }}
+          LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
         run:  |
               git clone $LAMBDA_REPO_URL
               REPO_NAME=$(echo "$LAMBDA_REPO_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
