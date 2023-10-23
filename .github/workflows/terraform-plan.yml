@@ -23,10 +23,10 @@ jobs:
 
       - name: Lambda Repo Code Zip
         run:  |
-              git clone ${{ vars.LAMBDA_REPO_URL }}
-              REPO_NAME=$(echo "${{ vars.LAMBDA_REPO_URL }}" | awk -F'/' '{print $NF}' | cut -d. -f1)
-              ls
-              zip deployment.zip ./$REPO_NAME/*.mjs
+              git clone $LAMBDA_REPO_URL
+              REPO_NAME=$(echo "$LAMBDA_REPO_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
+              cd $REPO_NAME
+              zip ../deployment.zip *.mjs
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
