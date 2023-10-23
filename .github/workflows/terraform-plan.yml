@@ -28,6 +28,7 @@ jobs:
               git clone $LAMBDA_REPO_URL
               REPO_NAME=$(echo "$LAMBDA_REPO_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
               cd $REPO_NAME
+              ls
               zip ../deployment.zip *.mjs
 
       - name: Upload Configuration
