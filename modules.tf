@@ -28,3 +28,9 @@ module "node" {
   max_size = var.max_size
 
 }
+
+module "lambda" {
+  source = "./modules/lambda"
+
+  lambda_name = var.lambda_name
+}
