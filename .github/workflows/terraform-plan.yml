@@ -23,11 +23,11 @@ jobs:
 
       - name: Lambda Repo Clone
         run:  |
-              git clone ${{ vars.LAMBDA_REPO_URL }} ./lambda-code
+              git clone ${{ vars.LAMBDA_REPO_URL }}
       
       - name: Create zip file
         run:  |
-              ls -l ./lambda-code
+              ls -l
               zip deployment.zip ./lambda-code/*.mjs
 
       - name: Upload Configuration
