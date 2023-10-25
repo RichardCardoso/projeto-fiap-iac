@@ -36,6 +36,10 @@ jobs:
               ls
               zip ../deployment.zip *.mjs
 
+      - name: Make scripts executable
+        run:  |
+              chmod +x check_nlb_status.sh
+
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
         id: apply-upload

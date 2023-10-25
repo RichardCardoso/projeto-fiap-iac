@@ -41,6 +41,8 @@ resource "kubernetes_service" "lb_projetofiap" {
 
 data "aws_lb" "this" {
   name = regex("^(?P<name>.+)-.+\\.elb\\..+\\.amazonaws\\.com", kubernetes_service.lb_projetofiap.status.0.load_balancer.0.ingress.0.hostname)["name"]
+
+  depends_on = [kubernetes_service.lb_projetofiap]
 }
 
 output "nlb_arn" {
