@@ -38,6 +38,7 @@ jobs:
     - name: Delete kubernetes cluster deployment
       run:  |
             kubectl delete -f ./kubernetes
+      continue-on-error: true
 
   terraform-destroy:
     name: 'Terraform Destroy'

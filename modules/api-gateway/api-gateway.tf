@@ -2,6 +2,8 @@ resource "aws_api_gateway_vpc_link" "this" {
   name        = "vpc-link-for-nlb"
   description = "VPC Link for Kubernetes NLB"
   target_arns = [var.nlb_arn]
+
+  depends_on = [var.nlb_wait_trigger]
 }
 
 resource "aws_api_gateway_rest_api" "this" {
@@ -42,7 +44,6 @@ resource "aws_api_gateway_integration" "this" {
 
 resource "aws_api_gateway_deployment" "api_projetofiap" {
   rest_api_id = aws_api_gateway_rest_api.this.id
-  stage_name  = "prod"
   depends_on  = [aws_api_gateway_integration.this]
 }
 

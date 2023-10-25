@@ -43,6 +43,20 @@ data "aws_lb" "this" {
   name = regex("^(?P<name>.+)-.+\\.elb\\..+\\.amazonaws\\.com", kubernetes_service.lb_projetofiap.status.0.load_balancer.0.ingress.0.hostname)["name"]
 }
 
+resource "null_resource" "wait_for_nlb" {
+  triggers = {
+    name = data.aws_lb.this.name
+  }
+
+  provisioner "local-exec" {
+    command = "aws elbv2 wait load-balancer-available --region ${var.region} --names ${self.triggers.name}"
+  }
+}
+
+output "wait_for_nlb_trigger" {
+  value = null_resource.wait_for_nlb.triggers
+}
+
 output "nlb_arn" {
   description = "The ARN of the Kubernetes NLB"
   value       = data.aws_lb.this.arn
