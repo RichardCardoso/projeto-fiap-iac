@@ -11,10 +11,11 @@ env:
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "projeto-fiap-iac-infra"
   CONFIG_DIRECTORY: "./"
-  API_NAME: "ProjetoFiapAPI"
   AWS_DEFAULT_REGION: 'us-east-1'
   CLUSTER_NAME: 'projeto-fiap'
   LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
+  API_NAME: "ProjetoFiapAPI"
+  STAGE_NAME: "prod"
 
 jobs:
   terraform:
