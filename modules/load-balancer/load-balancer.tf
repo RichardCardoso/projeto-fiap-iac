@@ -21,6 +21,7 @@ resource "kubernetes_service" "lb_app_projetofiap" {
     }
     annotations = {
       "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb"
+      "service.beta.kubernetes.io/aws-load-balancer-internal" = "true"
     }
   }
 
