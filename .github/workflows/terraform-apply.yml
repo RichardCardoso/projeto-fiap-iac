@@ -98,7 +98,7 @@ jobs:
       env:
         EXTERNAL_HOSTNAME: ${{ env.EXTERNAL_HOSTNAME }}
       run: |
-        WEBSITE_URL="http://$EXTERNAL_HOSTNAME/swagger-ui/index.html#/"
+        WEBSITE_URL="$EXTERNAL_HOSTNAME%//swagger-ui/index.html#/"
         REPO_OWNER=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f1)
         REPO_NAME=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f2)
 
