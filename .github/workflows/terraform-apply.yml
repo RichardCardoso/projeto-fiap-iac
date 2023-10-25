@@ -11,6 +11,10 @@ env:
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "projeto-fiap-iac-infra"
   CONFIG_DIRECTORY: "./"
+  API_NAME: "ProjetoFiapAPI"
+  AWS_DEFAULT_REGION: 'us-east-1'
+  CLUSTER_NAME: 'projeto-fiap'
+  LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
 
 jobs:
   terraform:
@@ -24,8 +28,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Zip Lambda Repo's Code
-        env:
-          LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
         run:  |
               git clone $LAMBDA_REPO_URL
               REPO_NAME=$(echo "$LAMBDA_REPO_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
@@ -58,9 +60,6 @@ jobs:
   deploy-app:
     needs: terraform
     runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_REGION: 'us-east-1'
-      CLUSTER_NAME: 'projeto-fiap'
     steps:
     
     - name: Checkout code
@@ -87,30 +86,16 @@ jobs:
       run:  |
             kubectl apply -f ./kubernetes
 
-    - name: Wait for External Hostname
-      id: wait-for-external-hostname
+    - name: Retrieve Api Invoke URL
       run: |
-        SERVICE_NAME="lb-app-projetofiap"
-        NAMESPACE="default"
+        API_ID=$(aws apigateway get-rest-apis --query "items[?name=='${{ env.API_NAME }}'].id" --output text)
+        INVOKE_URL="https://$API_ID.execute-api.${{ env.AWS_DEFAULT_REGION }}.amazonaws.com/${{ env.STAGE_NAME }}/"
 
-        # Timeout after 10 minutes
-        end=$((SECONDS+600))
+        echo "EXTERNAL_HOSTNAME=$INVOKE_URL" >> $GITHUB_ENV
 
-        while true; do
-            HOSTNAME=$(kubectl get svc $SERVICE_NAME -n $NAMESPACE -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-            if [[ ! -z $HOSTNAME ]]; then
-                echo "External hostname assigned: $HOSTNAME"
-                echo "EXTERNAL_HOSTNAME=$HOSTNAME" >> $GITHUB_ENV
-                break
-            fi
-            if [[ $SECONDS -ge $end ]]; then
-                echo "Timed out waiting for External hostname assignment."
-                exit 1
-            fi
-            echo "Waiting for External hostname..."
-            sleep 10
-        done
     - name: Set repository website URL
+      env:
+        EXTERNAL_HOSTNAME: ${{ env.EXTERNAL_HOSTNAME }}
       run: |
         WEBSITE_URL="http://$EXTERNAL_HOSTNAME/swagger-ui/index.html#/"
         REPO_OWNER=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f1)
@@ -122,7 +107,5 @@ jobs:
             -H "Authorization: token ${{ secrets.GH_API_TOKEN }}" \
             "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME" \
             -d "{\"name\": \"$REPO_NAME\", \"homepage\": \"$WEBSITE_URL\"}"
-      env:
-        EXTERNAL_HOSTNAME: ${{ env.EXTERNAL_HOSTNAME }}
 
 

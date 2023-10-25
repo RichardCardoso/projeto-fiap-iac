@@ -13,7 +13,7 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.this.token
 }
 
-resource "kubernetes_service" "lb_app_projetofiap" {
+resource "kubernetes_service" "lb_projetofiap" {
   metadata {
     name = "lb-app-projetofiap"
     labels = {
@@ -37,4 +37,18 @@ resource "kubernetes_service" "lb_app_projetofiap" {
 
     type = "LoadBalancer"
   }
+}
+
+data "aws_lb" "this" {
+  name = regex("^(?P<name>.+)-.+\\.elb\\..+\\.amazonaws\\.com", kubernetes_service.lb_projetofiap.status.0.load_balancer.0.ingress.0.hostname)["name"]
+}
+
+output "nlb_arn" {
+  description = "The ARN of the Kubernetes NLB"
+  value       = data.aws_lb.this.arn
+}
+
+output "nlb_dns_name" {
+  description = "The DNS name of the Kubernetes NLB"
+  value       = kubernetes_service.lb_projetofiap.status.0.load_balancer.0.ingress.0.hostname
 }

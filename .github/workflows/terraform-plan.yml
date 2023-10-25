@@ -112,3 +112,22 @@ jobs:
             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
             sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
             kubectl version --client
+
+    - name: Retrieve Api Invoke URL
+      run: |
+        API_ID=$(aws apigateway get-rest-apis --query "items[?name=='${{ env.API_NAME }}'].id" --output text)
+        INVOKE_URL="https://$API_ID.execute-api.${{ env.AWS_DEFAULT_REGION }}.amazonaws.com/${{ env.STAGE_NAME }}/"
+
+        echo "EXTERNAL_HOSTNAME=$INVOKE_URL" >> $GITHUB_ENV
+
+    - name: Set repository website URL
+      env:
+        EXTERNAL_HOSTNAME: ${{ env.EXTERNAL_HOSTNAME }}
+      run: |
+        WEBSITE_URL="http://$EXTERNAL_HOSTNAME/swagger-ui/index.html#/"
+        REPO_OWNER=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f1)
+        REPO_NAME=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f2)
+
+        echo $WEBSITE_URL
+        echo $REPO_OWNER
+        echo $REPO_NAME

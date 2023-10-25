@@ -35,8 +35,15 @@ module "lambda" {
   lambda_name = var.lambda_name
 }
 
-module "load-balancer" {
-  source = "./modules/load-balancer"
+module "kubernetes_nlb" {
+  source = "./modules/kubernetes_nlb"
 
   cluster_name = module.master.cluster_name
+}
+
+module "api_gateway" {
+  source = "./modules/api-gateway"
+
+  nlb_arn = module.kubernetes_nlb.nlb_arn
+  nlb_dns_name = module.kubernetes_nlb.nlb_dns_name
 }
