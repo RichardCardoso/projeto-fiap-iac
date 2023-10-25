@@ -1,7 +1,3 @@
-data "external" "check_nlb_status" {
-  program = ["./check_nlb_status.sh", var.nlb_arn]
-}
-
 resource "aws_api_gateway_vpc_link" "this" {
   name        = "vpc-link-for-nlb"
   description = "VPC Link for Kubernetes NLB"
