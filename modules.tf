@@ -39,11 +39,13 @@ module "kubernetes_nlb" {
   source = "./modules/kubernetes_nlb"
 
   cluster_name = module.master.cluster_name
+  region = var.region
 }
 
 module "api_gateway" {
   source = "./modules/api-gateway"
 
+  nlb_wait_trigger = module.kubernetes_nlb.wait_for_nlb_trigger
   nlb_arn = module.kubernetes_nlb.nlb_arn
   nlb_dns_name = module.kubernetes_nlb.nlb_dns_name
 }
