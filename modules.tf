@@ -34,9 +34,3 @@ module "lambda" {
 
   lambda_name = var.lambda_name
 }
-
-module "load-balancer" {
-  source = "./modules/load-balancer"
-
-  cluster_name = module.master.cluster_name
-}
