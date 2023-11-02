@@ -15,3 +15,7 @@ variable "db_password" {
   type        = string
   default     = "pagodaodamassa123"
 }
+
+variable "private_subnet_1a" {}
+
+variable "private_subnet_1b" {}
