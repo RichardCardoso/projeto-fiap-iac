@@ -7,13 +7,13 @@ variable "db_name" {
 variable "db_username" {
   description = "Nome de usuário do banco de dados"
   type        = string
-  default     = "ademar"
+  default     = "fiap_user"
 }
 
 variable "db_password" {
   description = "Senha do banco de dados"
   type        = string
-  default     = "pagodaodamassa123"
+  default     = "fiap_course1234"
 }
 
 variable "private_subnet_1a" {}
