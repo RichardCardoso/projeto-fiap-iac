@@ -115,6 +115,18 @@ jobs:
             sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
             kubectl version --client
 
+    - name: Retrieve db URL
+      run:  |
+        URL=$(aws rds describe-db-instances --db-instance-identifier terraform-20231103005215621300000001 --query 'DBInstances[0].Endpoint.Address' --output text)
+        echo "db_url = $URL"
+        echo "DB_URL=$URL" >> $GITHUB_ENV
+
+    - name: Replace db URL in db-secret.yaml
+      run:  |
+        echo "url = $DB_URL"
+        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/test_db@g' kubernetes/db-secret.yaml
+        cat kubernetes/db-secret.yaml
+
     - name: Retrieve Api Invoke URL
       run: |
         API_ID=$(aws apigateway get-rest-apis --query "items[?name=='${{ env.API_NAME }}'].id" --output text)
