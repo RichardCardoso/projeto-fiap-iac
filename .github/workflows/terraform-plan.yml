@@ -19,19 +19,13 @@ env:
 
   DB_CLUSTER_NAME: ${{ vars.DB_CLUSTER_NAME }}
   DB_NAME: ${{ vars.DB_NAME }}
-  DATASOURCE_USERNAME: ${{ vars.DB_USERNAME }}
-  DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_USERNAME: ${{ vars.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
 jobs:
   terraform:
     name: "Terraform Plan"
     runs-on: ubuntu-latest
-    env:
-      db_cluster_name: ${{ vars.DB_CLUSTER_NAME }}
-      TF_VAR_db_cluster_name: ${{ vars.DB_CLUSTER_NAME }}
-      TF_VAR_db_name: ${{ vars.DB_NAME }}
-      TF_VAR_db_username: ${{ vars.DB_USERNAME }}
-      TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
     permissions:
       contents: read
       pull-requests: write
@@ -46,6 +40,14 @@ jobs:
               cd $REPO_NAME
               ls
               zip ../deployment.zip *.mjs
+
+      - name: Replace terraform variable values
+        run:  |
+          sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' modules.tf
+          sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' modules.tf
+          sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' modules.tf
+          sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' modules.tf
+          cat modules.tf
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
@@ -135,8 +137,8 @@ jobs:
     - name: Replace db connection info in app-secret.yaml
       run:  |
         sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/${{ env.DB_NAME }}@g' kubernetes/app-secret.yaml
-        sed -i 's@SPRING_DATASOURCE_USERNAME: .*@SPRING_DATASOURCE_USERNAME: ${{ env.DATASOURCE_USERNAME }}@g' kubernetes/app-secret.yaml
-        sed -i 's@SPRING_DATASOURCE_PASSWORD: .*@SPRING_DATASOURCE_PASSWORD: ${{ env.DATASOURCE_PASSWORD }}@g' kubernetes/app-secret.yaml
+        sed -i 's@SPRING_DB_USERNAME: .*@SPRING_DB_USERNAME: ${{ env.DB_USERNAME }}@g' kubernetes/app-secret.yaml
+        sed -i 's@SPRING_DB_PASSWORD: .*@SPRING_DB_PASSWORD: ${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
         cat kubernetes/app-secret.yaml
 
     - name: Retrieve Api Invoke URL

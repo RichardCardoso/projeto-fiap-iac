@@ -1,20 +1,20 @@
 variable "db_name" {
-  description = "Nome do banco de dados - padrão fiap_projeto"
+  description = "Nome do banco de dados"
   type        = string
 }
 
 variable "db_username" {
-  description = "Nome de usuário do banco de dados - padrão fiap_user"
+  description = "Nome de usuário do banco de dados"
   type        = string
 }
 
 variable "db_password" {
-  description = "Senha do banco de dados - padrão fiap_course1234"
+  description = "Senha do banco de dados"
   type        = string
 }
 
 variable "db_cluster_name" {
-  description = "Nome do banco no rds - padrão projeto-fiap-db"
+  description = "Nome do banco no rds"
   type        = string
 }
 
