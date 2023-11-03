@@ -137,7 +137,7 @@ jobs:
 
     - name: Replace db connection info in app-secret.yaml
       run:  |
-        cat kubernetes/app-secret.yaml
+        echo ${{ env.DB_USERNAME }}
         sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/${{ env.DB_NAME }}@g' kubernetes/app-secret.yaml
         sed -i 's@SPRING_DB_USERNAME: .*@SPRING_DB_USERNAME: ${{ env.DB_USERNAME }}@g' kubernetes/app-secret.yaml
         sed -i 's@SPRING_DB_PASSWORD: .*@SPRING_DB_PASSWORD: ${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
