@@ -13,6 +13,11 @@ module "rds" {
   eks_subnet_public_1b = module.network.eks_subnet_public_1b
   eks_subnet_public_1a = module.network.eks_subnet_public_1a
   vpc_id = module.network.vpc_id
+
+  db_cluster_name = var.db_cluster_name;
+  db_name = var.db_name;
+  db_username = var.db_username;
+  db_password = var.db_password;
 }
 
 # module "master" {
