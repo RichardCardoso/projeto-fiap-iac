@@ -8,14 +8,21 @@ on:
 
 env:
   TF_CLOUD_ORGANIZATION: "projeto-fiap-64"
-  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "projeto-fiap-iac-infra"
   CONFIG_DIRECTORY: "./"
-  AWS_DEFAULT_REGION: 'us-east-1'
-  CLUSTER_NAME: 'projeto-fiap'
-  LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
   API_NAME: "ProjetoFiapAPI"
   STAGE_NAME: "prod"
+  AWS_DEFAULT_REGION: 'us-east-1'
+  CLUSTER_NAME: 'projeto-fiap'
+
+  LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
+
+  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+
+  DB_CLUSTER_NAME: ${{ vars.DB_CLUSTER_NAME }}
+  DB_NAME: ${{ vars.DB_NAME }}
+  DB_USERNAME: ${{ vars.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
 jobs:
   terraform:
@@ -35,6 +42,14 @@ jobs:
               cd $REPO_NAME
               ls
               zip ../deployment.zip *.mjs
+
+      - name: Replace terraform variable values
+        run:  |
+          sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' modules.tf
+          sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' modules.tf
+          sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' modules.tf
+          sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' modules.tf
+          cat modules.tf
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
@@ -61,6 +76,7 @@ jobs:
   deploy-app:
     needs: terraform
     runs-on: ubuntu-latest
+
     steps:
     
     - name: Checkout code
@@ -81,14 +97,16 @@ jobs:
 
     - name: Retrieve db URL
       run:  |
-        URL=$(aws rds describe-db-instances --db-instance-identifier projeto-fiap-db --query 'DBInstances[0].Endpoint.Address' --output text)
+        URL=$(aws rds describe-db-instances --db-instance-identifier $DB_CLUSTER_NAME --query 'DBInstances[0].Endpoint.Address' --output text)
         echo "db_url = $URL"
         echo "DB_URL=$URL" >> $GITHUB_ENV
 
     - name: Replace db URL in db-secret.yaml
       run:  |
-        echo "url = $DB_URL"
-        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/test_db@g' kubernetes/app-secret.yaml
+        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/${{ env.DB_NAME }}@g' kubernetes/app-secret.yaml
+        sed -i 's@SPRING_DATASOURCE_USERNAME: .*@SPRING_DATASOURCE_USERNAME: ${{ env.DB_USERNAME }}@g' kubernetes/app-secret.yaml
+        sed -i 's@SPRING_DATASOURCE_PASSWORD: .*@SPRING_DATASOURCE_PASSWORD: ${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
+        cat kubernetes/app-secret.yaml
 
     - name: Setup Kubeconfig
       run:  |
