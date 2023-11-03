@@ -5,6 +5,13 @@ module "network" {
   region = var.region
 }
 
+module "rds" {
+  source = "./modules/rds"
+
+  private_subnet_1a = module.network.private_subnet_1a
+  private_subnet_1b = module.network.private_subnet_1b
+}
+
 module "master" {
   source = "./modules/master"
 
