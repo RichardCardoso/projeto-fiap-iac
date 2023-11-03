@@ -14,10 +14,10 @@ module "rds" {
   eks_subnet_public_1a = module.network.eks_subnet_public_1a
   vpc_id = module.network.vpc_id
 
-  db_cluster_name = DB_CLUSTER_NAME_HERE
-  db_name = DB_NAME_HERE
-  db_username = DB_USERNAME_HERE
-  db_password = DB_PASSWORD_HERE
+  db_cluster_name = "DB_CLUSTER_NAME_HERE"
+  db_name = "DB_NAME_HERE"
+  db_username = "DB_USERNAME_HERE"
+  db_password = "DB_PASSWORD_HERE"
 }
 
 # module "master" {
