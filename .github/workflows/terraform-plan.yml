@@ -99,7 +99,7 @@ jobs:
       CLUSTER_NAME: 'projeto-fiap'
       DB_CLUSTER_NAME: ${{ vars.DB_CLUSTER_NAME }}
       DB_NAME: ${{ vars.DB_NAME }}
-      
+
     steps:
     
     - name: Checkout code
@@ -127,8 +127,8 @@ jobs:
     - name: Replace db URL in db-secret.yaml
       run:  |
         echo "url = $DB_URL"
-        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/test_db@g' kubernetes/db-secret.yaml
-        cat kubernetes/db-secret.yaml
+        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/test_db@g' kubernetes/app-secret.yaml
+        cat kubernetes/app-secret.yaml
 
     - name: Retrieve Api Invoke URL
       run: |

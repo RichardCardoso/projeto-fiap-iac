@@ -88,7 +88,7 @@ jobs:
     - name: Replace db URL in db-secret.yaml
       run:  |
         echo "url = $DB_URL"
-        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/test_db@g' kubernetes/db-secret.yaml
+        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/test_db@g' kubernetes/app-secret.yaml
 
     - name: Setup Kubeconfig
       run:  |
