@@ -6,13 +6,19 @@ on:
 permissions:
   contents: read
 
+env:
+  AWS_DEFAULT_REGION: 'us-east-1'
+  CLUSTER_NAME: 'projeto-fiap'
+
+  DB_CLUSTER_NAME: ${{ vars.DB_CLUSTER_NAME }}
+  DB_NAME: ${{ vars.DB_NAME }}
+  DB_USERNAME: ${{ vars.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
 jobs:
   destroy-app:
     name: "App Destroy"
     runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_REGION: 'us-east-1'
-      CLUSTER_NAME: 'projeto-fiap'
     steps:
     
     - name: Checkout code
