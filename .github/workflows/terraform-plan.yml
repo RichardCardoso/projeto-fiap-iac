@@ -43,7 +43,6 @@ jobs:
 
       - name: Replace terraform variable values
         run:  |
-          cat modules.tf
           sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' modules.tf
           sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' modules.tf
           sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' modules.tf
@@ -137,7 +136,6 @@ jobs:
 
     - name: Replace db connection info in app-secret.yaml
       run:  |
-        echo ${{ env.DB_USERNAME }}
         sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/${{ env.DB_NAME }}@g' kubernetes/app-secret.yaml
         sed -i 's@SPRING_DATASOURCE_USERNAME: .*@SPRING_DATASOURCE_USERNAME: ${{ env.DB_USERNAME }}@g' kubernetes/app-secret.yaml
         sed -i 's@SPRING_DATASOURCE_PASSWORD: .*@SPRING_DATASOURCE_PASSWORD: ${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
