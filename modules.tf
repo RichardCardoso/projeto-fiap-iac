@@ -10,49 +10,52 @@ module "rds" {
 
   private_subnet_1a = module.network.private_subnet_1a
   private_subnet_1b = module.network.private_subnet_1b
+  eks_subnet_public_1b = module.network.eks_subnet_public_1b
+  eks_subnet_public_1a = module.network.eks_subnet_public_1a
+  vpc_id = module.network.vpc_id
 }
 
-module "master" {
-  source = "./modules/master"
+# module "master" {
+#   source = "./modules/master"
 
-  cluster_name = var.cluster_name
-  kubernetes_version = var.kubernetes_version
+#   cluster_name = var.cluster_name
+#   kubernetes_version = var.kubernetes_version
 
-  private_subnet_1a = module.network.private_subnet_1a
-  private_subnet_1b = module.network.private_subnet_1b
-}
+#   private_subnet_1a = module.network.private_subnet_1a
+#   private_subnet_1b = module.network.private_subnet_1b
+# }
 
-module "node" {
-  source = "./modules/node"
+# module "node" {
+#   source = "./modules/node"
 
-  cluster_name = module.master.cluster_name
+#   cluster_name = module.master.cluster_name
 
-  private_subnet_1a = module.network.private_subnet_1a
-  private_subnet_1b = module.network.private_subnet_1b
+#   private_subnet_1a = module.network.private_subnet_1a
+#   private_subnet_1b = module.network.private_subnet_1b
 
-  desired_size = var.desired_size
-  min_size = var.min_size
-  max_size = var.max_size
+#   desired_size = var.desired_size
+#   min_size = var.min_size
+#   max_size = var.max_size
 
-}
+# }
 
-module "lambda" {
-  source = "./modules/lambda"
+# module "lambda" {
+#   source = "./modules/lambda"
 
-  lambda_name = var.lambda_name
-}
+#   lambda_name = var.lambda_name
+# }
 
-module "kubernetes_nlb" {
-  source = "./modules/kubernetes_nlb"
+# module "kubernetes_nlb" {
+#   source = "./modules/kubernetes_nlb"
 
-  cluster_name = module.master.cluster_name
-  region = var.region
-}
+#   cluster_name = module.master.cluster_name
+#   region = var.region
+# }
 
-module "api_gateway" {
-  source = "./modules/api-gateway"
+# module "api_gateway" {
+#   source = "./modules/api-gateway"
 
-  nlb_wait_trigger = module.kubernetes_nlb.wait_for_nlb_trigger
-  nlb_arn = module.kubernetes_nlb.nlb_arn
-  nlb_dns_name = module.kubernetes_nlb.nlb_dns_name
-}
+#   nlb_wait_trigger = module.kubernetes_nlb.wait_for_nlb_trigger
+#   nlb_arn = module.kubernetes_nlb.nlb_arn
+#   nlb_dns_name = module.kubernetes_nlb.nlb_dns_name
+# }
