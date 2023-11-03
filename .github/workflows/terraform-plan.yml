@@ -6,11 +6,25 @@ on:
 
 env:
   TF_CLOUD_ORGANIZATION: "projeto-fiap-64"
-  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "projeto-fiap-iac-infra"
   CONFIG_DIRECTORY: "./"
   API_NAME: "ProjetoFiapAPI"
   STAGE_NAME: "prod"
+  AWS_DEFAULT_REGION: 'us-east-1'
+  CLUSTER_NAME: 'projeto-fiap'
+
+  LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
+
+  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+  TF_VAR_db_cluster_name: ${{ vars.DB_CLUSTER_NAME }}
+  TF_VAR_db_name: ${{ vars.DB_NAME }}
+  TF_VAR_db_username: ${{ vars.DB_USERNAME }}
+  TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+
+  DB_CLUSTER_NAME: ${{ vars.DB_CLUSTER_NAME }}
+  DB_NAME: ${{ vars.DB_NAME }}
+  DATASOURCE_USERNAME: ${{ vars.DB_USERNAME }}
+  DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
 jobs:
   terraform:
@@ -24,8 +38,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Lambda Repo Code Zip
-        env:
-          LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
         run:  |
               git clone $LAMBDA_REPO_URL
               REPO_NAME=$(echo "$LAMBDA_REPO_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
@@ -94,11 +106,6 @@ jobs:
   kubernetes-validation:
     needs: terraform
     runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_REGION: 'us-east-1'
-      CLUSTER_NAME: 'projeto-fiap'
-      DB_CLUSTER_NAME: ${{ vars.DB_CLUSTER_NAME }}
-      DB_NAME: ${{ vars.DB_NAME }}
 
     steps:
     
@@ -124,9 +131,6 @@ jobs:
         echo "DB_URL=$URL" >> $GITHUB_ENV
 
     - name: Replace db connection info in app-secret.yaml
-      env:
-        DATASOURCE_USERNAME: ${{ vars.DB_USERNAME }}
-        DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run:  |
         sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_URL}:5432/${DB_NAME}@g' kubernetes/app-secret.yaml
         sed -i 's@SPRING_DATASOURCE_USERNAME: .*@SPRING_DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}'
