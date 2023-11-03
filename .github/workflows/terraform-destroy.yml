@@ -54,6 +54,14 @@ jobs:
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+    - name: Replace terraform variable values
+      run:  |
+        sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' modules.tf
+        sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' modules.tf
+        sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' modules.tf
+        sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' modules.tf
+        cat modules.tf
+
     - name: Terraform Init
       run: terraform init
 
