@@ -137,9 +137,9 @@ jobs:
 
     - name: Replace db URL in db-secret.yaml
       run:  |
-        sed -i 's@SPRING_DATASOURCE_URL: .*@SPRING_DATASOURCE_URL: jdbc:postgresql://${{ env.DB_URL }}:5432/${{ env.DB_NAME }}@g' kubernetes/app-secret.yaml
-        sed -i 's@SPRING_DATASOURCE_USERNAME: .*@SPRING_DATASOURCE_USERNAME: ${{ env.DB_USERNAME }}@g' kubernetes/app-secret.yaml
-        sed -i 's@SPRING_DATASOURCE_PASSWORD: .*@SPRING_DATASOURCE_PASSWORD: ${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
+        sed -i 's@DB_URL_HERE@jdbc:postgresql://${{ env.DB_URL }}:5432/${{ env.DB_NAME }}@g' kubernetes/app-secret.yaml
+        sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' kubernetes/app-secret.yaml
+        sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
         cat kubernetes/app-secret.yaml
 
     - name: Retrieve Api Invoke URL
