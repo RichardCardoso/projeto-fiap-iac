@@ -27,6 +27,7 @@ jobs:
     name: "Terraform Plan"
     runs-on: ubuntu-latest
     env:
+      db_cluster_name: ${{ vars.DB_CLUSTER_NAME }}
       TF_VAR_db_cluster_name: ${{ vars.DB_CLUSTER_NAME }}
       TF_VAR_db_name: ${{ vars.DB_NAME }}
       TF_VAR_db_username: ${{ vars.DB_USERNAME }}
