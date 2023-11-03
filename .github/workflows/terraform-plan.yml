@@ -97,6 +97,9 @@ jobs:
     env:
       AWS_DEFAULT_REGION: 'us-east-1'
       CLUSTER_NAME: 'projeto-fiap'
+      DB_CLUSTER_NAME: ${{ vars.DB_CLUSTER_NAME }}
+      DB_NAME: ${{ vars.DB_NAME }}
+      
     steps:
     
     - name: Checkout code
@@ -117,7 +120,7 @@ jobs:
 
     - name: Retrieve db URL
       run:  |
-        URL=$(aws rds describe-db-instances --db-instance-identifier terraform-20231103005215621300000001 --query 'DBInstances[0].Endpoint.Address' --output text)
+        URL=$(aws rds describe-db-instances --db-instance-identifier $DB_CLUSTER_NAME --query 'DBInstances[0].Endpoint.Address' --output text)
         echo "db_url = $URL"
         echo "DB_URL=$URL" >> $GITHUB_ENV
 
