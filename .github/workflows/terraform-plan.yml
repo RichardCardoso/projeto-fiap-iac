@@ -47,11 +47,11 @@ jobs:
               REPO_NAME=$(echo "$LAMBDA_JWT_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
               cd $REPO_NAME
               ls
-              sed "s@$LAMBDA_BD_USER@'${DB_USERNAME}'@g" index.mjs
-              sed "s@$LAMBDA_BD_PASSWORD@'${DB_PASSWORD}'@g" index.mjs
-              sed "s@$LAMBDA_BD_HOST@'unknown'@g" index.mjs
-              sed "s@$LAMBDA_BD_PORT@'${DB_PORT}'@g" index.mjs
-              sed "s@$LAMBDA_BD_DATABASE@'${DB_NAME}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_USER@'${DB_USERNAME}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_PASSWORD@'${DB_PASSWORD}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_HOST@'unknown'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_PORT@'${DB_PORT}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_DATABASE@'${DB_NAME}'@g" index.mjs
               grep "const BD_" index.mjs
               zip ../deployment.zip *.mjs
 
@@ -61,11 +61,11 @@ jobs:
               REPO_NAME=$(echo "$LAMBDA_AUTH_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
               cd $REPO_NAME
               ls
-              sed "s@$LAMBDA_BD_USER@'${DB_USERNAME}'@g" index.mjs
-              sed "s@$LAMBDA_BD_PASSWORD@'${DB_PASSWORD}'@g" index.mjs
-              sed "s@$LAMBDA_BD_HOST@'unknown'@g" index.mjs
-              sed "s@$LAMBDA_BD_PORT@'${DB_PORT}'@g" index.mjs
-              sed "s@$LAMBDA_BD_DATABASE@'${DB_NAME}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_USER@'${DB_USERNAME}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_PASSWORD@'${DB_PASSWORD}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_HOST@'unknown'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_PORT@'${DB_PORT}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_DATABASE@'${DB_NAME}'@g" index.mjs
               grep "const BD_" index.mjs
               zip ../deployment.zip *.mjs
 
