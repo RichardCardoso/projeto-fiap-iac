@@ -18,6 +18,7 @@ module "rds" {
   db_name = "DB_NAME_HERE"
   db_username = "DB_USERNAME_HERE"
   db_password = "DB_PASSWORD_HERE"
+  db_port = "DB_PORT_HERE"
 }
 
 module "master" {
