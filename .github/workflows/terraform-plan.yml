@@ -64,7 +64,6 @@ jobs:
               REPO_NAME=$(echo "$LAMBDA_AUTH_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
               cd $REPO_NAME
               ls
-              cat index.mjs
               sed -i "s@$LAMBDA_JWT_SECRET@'${LAMBDA_JWT_SECRET_VALUE}'@g" index.mjs
               grep "const " index.mjs
               zip ../deployment.zip *.mjs
