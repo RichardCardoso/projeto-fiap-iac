@@ -68,7 +68,7 @@ jobs:
         sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' variables.tf
         sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' variables.tf
         sed -i 's@DB_PORT_HERE@${{ env.DB_PORT }}@g' variables.tf
-        cat modules.tf
+        cat variables.tf
 
     - name: Terraform Init
       run: terraform init
