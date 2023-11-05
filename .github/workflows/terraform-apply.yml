@@ -15,7 +15,14 @@ env:
   AWS_DEFAULT_REGION: 'us-east-1'
   CLUSTER_NAME: 'projeto-fiap'
 
-  LAMBDA_REPO_URL: ${{ vars.LAMBDA_REPO_URL }}
+  LAMBDA_JWT_URL: ${{ vars.LAMBDA_JWT_URL }}
+  LAMBDA_AUTH_URL: ${{ vars.LAMBDA_AUTH_URL }}
+
+  LAMBDA_BD_USER: 'process.env.BD_USER'
+  LAMBDA_BD_PASSWORD: 'process.env.BD_PASSWORD'
+  LAMBDA_BD_HOST: 'process.env.BD_HOST'
+  LAMBDA_BD_PORT: 'process.env.BD_PORT'
+  LAMBDA_JWT_SECRET: 'process.env.JWT_SECRET'
 
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
 
@@ -23,6 +30,8 @@ env:
   DB_NAME: ${{ vars.DB_NAME }}
   DB_USERNAME: ${{ vars.DB_USERNAME }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_PORT: ${{ vars.DB_PORT }}
+  LAMBDA_JWT_SECRET_VALUE: ${{ secrets.LAMBDA_JWT_SECRET }}
 
 jobs:
   terraform:
@@ -35,21 +44,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Zip Lambda Repo's Code
+      - name: Zip jwt lambda repo's code
         run:  |
-              git clone $LAMBDA_REPO_URL
-              REPO_NAME=$(echo "$LAMBDA_REPO_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
+              git clone $LAMBDA_JWT_URL
+              REPO_NAME=$(echo "$LAMBDA_JWT_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
               cd $REPO_NAME
               ls
-              zip ../deployment.zip *.mjs
+              sed -i "s@$LAMBDA_BD_USER@'${DB_USERNAME}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_PASSWORD@'${DB_PASSWORD}'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_HOST@'unknown'@g" index.mjs
+              sed -i "s@$LAMBDA_BD_PORT@'${DB_PORT}'@g" index.mjs
+              sed -i "s@$LAMBDA_JWT_SECRET@'${LAMBDA_JWT_SECRET_VALUE}'@g" index.mjs
+              grep "const " index.mjs
+              zip ../deployment_jwt.zip *.mjs
+
+      - name: Zip auth lambda repo's code
+        run:  |
+              git clone $LAMBDA_AUTH_URL
+              REPO_NAME=$(echo "$LAMBDA_AUTH_URL" | awk -F'/' '{print $NF}' | cut -d. -f1)
+              cd $REPO_NAME
+              ls
+              sed -i "s@$LAMBDA_JWT_SECRET@'${LAMBDA_JWT_SECRET_VALUE}'@g" index.mjs
+              grep "const " index.mjs
+              zip ../deployment_auth.zip *.mjs
 
       - name: Replace terraform variable values
         run:  |
-          sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' modules.tf
-          sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' modules.tf
-          sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' modules.tf
-          sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' modules.tf
-          cat modules.tf
+          sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' variables.tf
+          sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' variables.tf
+          sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' variables.tf
+          sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' variables.tf
+          sed -i 's@DB_PORT_HERE@${{ env.DB_PORT }}@g' variables.tf
+          cat variables.tf
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0

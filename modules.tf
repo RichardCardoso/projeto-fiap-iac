@@ -45,16 +45,17 @@ module "node" {
 
 }
 
-module "lambda_auth" {
-  source = "./modules/lambda_auth"
-
-  lambda_name = var.lambda_auth_name
-}
-
 module "lambda_jwt" {
   source = "./modules/lambda_jwt"
 
   lambda_name = var.lambda_jwt_name
+  db_endpoint = module.rds.db_instance_endpoint
+}
+
+module "lambda_auth" {
+  source = "./modules/lambda_auth"
+
+  lambda_name = var.lambda_auth_name
 }
 
 module "kubernetes_nlb" {

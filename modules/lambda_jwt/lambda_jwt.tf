@@ -6,6 +6,13 @@ resource "aws_lambda_function" "terraform_lambda_jwt" {
   handler = "index.handler"
   role    = "${aws_iam_role.iam_for_lambda_jwt.arn}"
   runtime = "nodejs18.x"
+
+  environment {
+    variables = {
+      BD_DATABASE = var.db_endpoint
+    }
+  }
+
 }
 
 resource "aws_iam_role" "iam_for_lambda_jwt" {
