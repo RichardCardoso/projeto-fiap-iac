@@ -14,6 +14,7 @@ env:
   DB_NAME: ${{ vars.DB_NAME }}
   DB_USERNAME: ${{ vars.DB_USERNAME }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_PORT: ${{ vars.DB_PORT }}
 
 jobs:
   destroy-app:
@@ -66,6 +67,7 @@ jobs:
         sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' modules.tf
         sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' modules.tf
         sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' modules.tf
+        sed -i 's@DB_PORT_HERE@${{ env.DB_PORT }}@g' variables.tf
         cat modules.tf
 
     - name: Terraform Init
