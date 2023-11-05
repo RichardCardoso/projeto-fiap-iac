@@ -66,7 +66,7 @@ jobs:
               ls
               cat index.mjs
               sed -i "s@$LAMBDA_JWT_SECRET@'${LAMBDA_JWT_SECRET_VALUE}'@g" index.mjs
-              grep "const BD_" index.mjs
+              grep "const " index.mjs
               zip ../deployment.zip *.mjs
 
       - name: Replace terraform variable values
