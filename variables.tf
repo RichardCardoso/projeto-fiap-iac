@@ -45,3 +45,6 @@ variable "db_password" {
 variable "db_port" {
   default = "DB_PORT_HERE"
 }
+variable "jwt_secret" {
+  default = "JWT_SECRET_HERE"
+}

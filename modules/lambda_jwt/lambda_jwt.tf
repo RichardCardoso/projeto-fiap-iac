@@ -9,7 +9,12 @@ resource "aws_lambda_function" "terraform_lambda_jwt" {
 
   environment {
     variables = {
-      BD_DATABASE = var.db_endpoint
+      BD_HOST = var.db_endpoint
+      BD_USER = var.db_username
+      BD_PASSWORD = var.db_password
+      BD_PORT = var.db_port
+      BD_DATABASE = var.db_database
+      JWT_SECRET = var.jwt_secret
     }
   }
 

@@ -50,12 +50,18 @@ module "lambda_jwt" {
 
   lambda_name = var.lambda_jwt_name
   db_endpoint = module.rds.db_instance_endpoint
+  db_username = var.db_username
+  db_password = var.db_password
+  db_port = var.db_port
+  db_database = var.db_name
+  jwt_secret = var.jwt_secret
 }
 
 module "lambda_auth" {
   source = "./modules/lambda_auth"
 
   lambda_name = var.lambda_auth_name
+  jwt_secret = var.jwt_secret
 }
 
 module "kubernetes_nlb" {

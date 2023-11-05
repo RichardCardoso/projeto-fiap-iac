@@ -6,6 +6,13 @@ resource "aws_lambda_function" "terraform_lambda_auth" {
   handler = "index.handler"
   role    = "${aws_iam_role.iam_for_lambda_auth.arn}"
   runtime = "nodejs18.x"
+
+  environment {
+    variables = {
+      JWT_SECRET = var.jwt_secret
+    }
+  }
+
 }
 
 resource "aws_iam_role" "iam_for_lambda_auth" {
