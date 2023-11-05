@@ -55,7 +55,7 @@ jobs:
               sed -i "s@$LAMBDA_BD_PORT@'${DB_PORT}'@g" index.mjs
               sed -i "s@$LAMBDA_BD_DATABASE@'${DB_NAME}'@g" index.mjs
               sed -i "s@$LAMBDA_JWT_SECRET@'${LAMBDA_JWT_SECRET_VALUE}'@g" index.mjs
-              grep "const BD_" index.mjs
+              grep "const " index.mjs
               zip ../deployment.zip *.mjs
 
       - name: Zip auth lambda repo's code
