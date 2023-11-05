@@ -56,7 +56,7 @@ jobs:
               sed -i "s@$LAMBDA_BD_DATABASE@'${DB_NAME}'@g" index.mjs
               sed -i "s@$LAMBDA_JWT_SECRET@'${LAMBDA_JWT_SECRET_VALUE}'@g" index.mjs
               grep "const " index.mjs
-              zip ../deployment.zip *.mjs
+              zip ../deployment_jwt.zip *.mjs
 
       - name: Zip auth lambda repo's code
         run:  |
@@ -66,16 +66,16 @@ jobs:
               ls
               sed -i "s@$LAMBDA_JWT_SECRET@'${LAMBDA_JWT_SECRET_VALUE}'@g" index.mjs
               grep "const " index.mjs
-              zip ../deployment.zip *.mjs
+              zip ../deployment_auth.zip *.mjs
 
       - name: Replace terraform variable values
         run:  |
-          sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' modules.tf
-          sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' modules.tf
-          sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' modules.tf
-          sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' modules.tf
-          sed -i 's@DB_PORT_HERE@${{ env.DB_PORT }}@g' modules.tf
-          cat modules.tf
+          sed -i 's@DB_CLUSTER_NAME_HERE@${{ env.DB_CLUSTER_NAME }}@g' variables.tf
+          sed -i 's@DB_NAME_HERE@${{ env.DB_NAME }}@g' variables.tf
+          sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' variables.tf
+          sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' variables.tf
+          sed -i 's@DB_PORT_HERE@${{ env.DB_PORT }}@g' variables.tf
+          cat variables.tf
 
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0

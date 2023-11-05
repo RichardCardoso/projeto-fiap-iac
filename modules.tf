@@ -14,11 +14,11 @@ module "rds" {
   eks_subnet_public_1a = module.network.eks_subnet_public_1a
   vpc_id = module.network.vpc_id
 
-  db_cluster_name = "DB_CLUSTER_NAME_HERE"
-  db_name = "DB_NAME_HERE"
-  db_username = "DB_USERNAME_HERE"
-  db_password = "DB_PASSWORD_HERE"
-  db_port = "DB_PORT_HERE"
+  db_cluster_name = var.db_cluster_name
+  db_name = var.db_name
+  db_username = var.db_username
+  db_password = var.db_password
+  db_port = var.db_port
 }
 
 module "master" {
@@ -45,10 +45,16 @@ module "node" {
 
 }
 
-module "lambda" {
-  source = "./modules/lambda"
+module "lambda_auth" {
+  source = "./modules/lambda_auth"
 
-  lambda_name = var.lambda_name
+  lambda_name = var.lambda_auth_name
+}
+
+module "lambda_jwt" {
+  source = "./modules/lambda_jwt"
+
+  lambda_name = var.lambda_jwt_name
 }
 
 module "kubernetes_nlb" {
