@@ -156,35 +156,3 @@ jobs:
             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
             sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
             kubectl version --client
-
-    - name: Retrieve db URL
-      run:  |
-        URL=$(aws rds describe-db-instances --db-instance-identifier $DB_CLUSTER_NAME --query 'DBInstances[0].Endpoint.Address' --output text)
-        echo "db_url = $URL"
-        echo "DB_URL=$URL" >> $GITHUB_ENV
-
-    - name: Replace db URL in db-secret.yaml
-      run:  |
-        sed -i 's@DB_URL_HERE@jdbc:postgresql://${{ env.DB_URL }}:${{ env.DB_PORT }}/${{ env.DB_NAME }}@g' kubernetes/app-secret.yaml
-        sed -i 's@DB_USERNAME_HERE@${{ env.DB_USERNAME }}@g' kubernetes/app-secret.yaml
-        sed -i 's@DB_PASSWORD_HERE@${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
-        cat kubernetes/app-secret.yaml
-
-    - name: Retrieve Api Invoke URL
-      run: |
-        API_ID=$(aws apigateway get-rest-apis --query "items[?name=='${{ env.API_NAME }}'].id" --output text)
-        INVOKE_URL="https://$API_ID.execute-api.${{ env.AWS_DEFAULT_REGION }}.amazonaws.com/${{ env.STAGE_NAME }}/"
-
-        echo "EXTERNAL_HOSTNAME=$INVOKE_URL" >> $GITHUB_ENV
-
-    - name: Set repository website URL
-      env:
-        EXTERNAL_HOSTNAME: ${{ env.EXTERNAL_HOSTNAME }}
-      run: |
-        WEBSITE_URL="${EXTERNAL_HOSTNAME}swagger-ui/index.html#/"
-        REPO_OWNER=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f1)
-        REPO_NAME=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f2)
-
-        echo $WEBSITE_URL
-        echo $REPO_OWNER
-        echo $REPO_NAME
