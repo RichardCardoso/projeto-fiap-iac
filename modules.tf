@@ -77,7 +77,7 @@ module "api_gateway" {
   nlb_wait_trigger = module.kubernetes_nlb.wait_for_nlb_trigger
   nlb_arn = module.kubernetes_nlb.nlb_arn
   nlb_dns_name = module.kubernetes_nlb.nlb_dns_name
-  lambda_invoke_arn   = module.lambda_auth.lambda_invoke_arn
+  lambda_invoke_arn   = module.lambda_jwt.lambda_invoke_arn
 
   lambda_auth_name = var.lambda_auth_name
   lambda_jwt_name = var.lambda_jwt_name
