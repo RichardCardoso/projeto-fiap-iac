@@ -5,7 +5,7 @@ resource "aws_api_gateway_authorizer" "projeto_fiap_authorizer" {
   authorizer_credentials          = var.lambda_auth_role_arn
   authorizer_result_ttl_in_seconds = 0  # You can set this to a non-zero value to cache authorizer responses.
   identity_source                 = "method.request.header.Authorization"
-  type                            = "TOKEN"  # TOKEN for an authorization token, REQUEST for request parameters.
+  type                            = "REQUEST"
 
   # The lambda function should allow the API Gateway service to invoke it.
   depends_on = [aws_lambda_permission.api_gateway]
