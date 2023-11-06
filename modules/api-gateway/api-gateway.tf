@@ -56,7 +56,7 @@ resource "aws_api_gateway_integration" "lambda_proxy_integration" {
 resource "aws_lambda_permission" "api_gateway" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = var.lambda_jwt_name
+  function_name = var.lambda_function_jwt_arn
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.this.execution_arn}/*"
 }
@@ -64,7 +64,7 @@ resource "aws_lambda_permission" "api_gateway" {
 resource "aws_lambda_permission" "api_gateway_auth" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = var.lambda_auth_name
+  function_name = var.lambda_function_auth_arn
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.this.execution_arn}/*"
 }

@@ -18,3 +18,14 @@ variable "lambda_role_arn" {}
 variable "lambda_auth_invoke_arn" {}
 
 variable "lambda_auth_role_arn" {}
+
+
+variable "lambda_function_jwt_arn" {
+  description = "The ARN of the Lambda function"
+  type        = string
+}
+
+variable "lambda_function_auth_arn" {
+  description = "The ARN of the Lambda function"
+  type        = string
+}
