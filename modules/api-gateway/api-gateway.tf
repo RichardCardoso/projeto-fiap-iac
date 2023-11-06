@@ -66,7 +66,7 @@ resource "aws_lambda_permission" "api_gateway_auth" {
   action        = "lambda:InvokeFunction"
   function_name = var.lambda_auth_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.this.execution_arn}/*/${aws_api_gateway_method.proxy.http_method}${aws_api_gateway_resource.proxy.path}"
+  source_arn    = "${aws_api_gateway_rest_api.this.execution_arn}/*"
 }
 
 resource "aws_api_gateway_integration" "this" {
