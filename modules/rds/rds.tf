@@ -3,8 +3,8 @@ resource "aws_db_subnet_group" "default" {
 
   subnet_ids = [
 
-      var.eks_subnet_public_1b,
-      var.eks_subnet_public_1a
+      var.private_subnet_1a, 
+      var.private_subnet_1b
   ]
 
   tags = { 
@@ -51,5 +51,5 @@ resource "aws_db_instance" "default" {
 
   vpc_security_group_ids = [aws_security_group.db_security_group.id]
 
-  publicly_accessible = true #remover antes da entrega, apenas para testes
+  #publicly_accessible = true #remover antes da entrega, apenas para testes
 }
