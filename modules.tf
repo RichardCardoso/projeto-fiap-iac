@@ -55,6 +55,11 @@ module "lambda_jwt" {
   db_port = var.db_port
   db_database = var.db_name
   jwt_secret = var.jwt_secret
+
+  db_security_group_id = module.rds.db_security_group_id
+  private_subnet_1a = module.network.private_subnet_1a
+  private_subnet_1b = module.network.private_subnet_1b
+
 }
 
 module "lambda_auth" {
@@ -62,6 +67,10 @@ module "lambda_auth" {
 
   lambda_name = var.lambda_auth_name
   jwt_secret = var.jwt_secret
+
+  db_security_group_id = module.rds.db_security_group_id
+  private_subnet_1a = module.network.private_subnet_1a
+  private_subnet_1b = module.network.private_subnet_1b
 }
 
 module "kubernetes_nlb" {

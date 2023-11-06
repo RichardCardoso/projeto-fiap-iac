@@ -13,6 +13,14 @@ resource "aws_lambda_function" "terraform_lambda_auth" {
     }
   }
 
+  vpc_config {
+    subnet_ids = [
+        var.private_subnet_1a, 
+        var.private_subnet_1b
+    ]
+    security_group_ids = [var.db_security_group_id]
+  }
+
 }
 
 resource "aws_iam_role" "iam_for_lambda_auth" {
@@ -30,5 +38,25 @@ resource "aws_iam_role" "iam_for_lambda_auth" {
       "Sid": ""
     }
   ]
+  })
+}
+
+resource "aws_iam_role_policy" "lambda_vpc_access" {
+  name   = "LambdaVPCAccess"
+  role   = aws_iam_role.iam_for_lambda_auth.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect    = "Allow",
+        Action    = [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+        ],
+        Resource = "*"
+      },
+    ]
   })
 }
