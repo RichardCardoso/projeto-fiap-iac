@@ -12,3 +12,5 @@ variable "lambda_invoke_arn" {
   description = "ARN for invoking the Lambda function"
   type        = string
 }
+
+variable "lambda_role_arn" {}
