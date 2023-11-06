@@ -18,6 +18,11 @@ variable "db_cluster_name" {
   type        = string
 }
 
+variable "db_port" {
+  description = "Porta do banco no rds"
+  type = number
+}
+
 variable "private_subnet_1a" {}
 
 variable "private_subnet_1b" {}

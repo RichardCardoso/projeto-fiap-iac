@@ -14,10 +14,11 @@ module "rds" {
   eks_subnet_public_1a = module.network.eks_subnet_public_1a
   vpc_id = module.network.vpc_id
 
-  db_cluster_name = "DB_CLUSTER_NAME_HERE"
-  db_name = "DB_NAME_HERE"
-  db_username = "DB_USERNAME_HERE"
-  db_password = "DB_PASSWORD_HERE"
+  db_cluster_name = var.db_cluster_name
+  db_name = var.db_name
+  db_username = var.db_username
+  db_password = var.db_password
+  db_port = var.db_port
 }
 
 module "master" {
@@ -44,10 +45,32 @@ module "node" {
 
 }
 
-module "lambda" {
-  source = "./modules/lambda"
+module "lambda_jwt" {
+  source = "./modules/lambda_jwt"
 
-  lambda_name = var.lambda_name
+  lambda_name = var.lambda_jwt_name
+  db_endpoint = module.rds.db_instance_endpoint
+  db_username = var.db_username
+  db_password = var.db_password
+  db_port = var.db_port
+  db_database = var.db_name
+  jwt_secret = var.jwt_secret
+
+  db_security_group_id = module.rds.db_security_group_id
+  private_subnet_1a = module.network.private_subnet_1a
+  private_subnet_1b = module.network.private_subnet_1b
+
+}
+
+module "lambda_auth" {
+  source = "./modules/lambda_auth"
+
+  lambda_name = var.lambda_auth_name
+  jwt_secret = var.jwt_secret
+
+  db_security_group_id = module.rds.db_security_group_id
+  private_subnet_1a = module.network.private_subnet_1a
+  private_subnet_1b = module.network.private_subnet_1b
 }
 
 module "kubernetes_nlb" {
@@ -63,4 +86,13 @@ module "api_gateway" {
   nlb_wait_trigger = module.kubernetes_nlb.wait_for_nlb_trigger
   nlb_arn = module.kubernetes_nlb.nlb_arn
   nlb_dns_name = module.kubernetes_nlb.nlb_dns_name
+
+  lambda_invoke_arn = module.lambda_jwt.lambda_invoke_arn
+  lambda_role_arn   = module.lambda_jwt.authorizer_iam_role_arn
+
+  lambda_auth_invoke_arn = module.lambda_auth.lambda_auth_invoke_arn
+  lambda_auth_role_arn = module.lambda_auth.authorizer_auth_iam_role_arn
+
+  lambda_auth_name = var.lambda_auth_name
+  lambda_jwt_name = var.lambda_jwt_name
 }
