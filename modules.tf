@@ -81,6 +81,9 @@ module "api_gateway" {
   lambda_invoke_arn = module.lambda_jwt.lambda_invoke_arn
   lambda_role_arn   = module.lambda_jwt.authorizer_iam_role_arn
 
+  lambda_auth_invoke_arn = module.lambda_auth.lambda_auth_invoke_arn
+  lambda_auth_role_arn = module.lambda_auth.authorizer_auth_iam_role_arn
+
   lambda_auth_name = var.lambda_auth_name
   lambda_jwt_name = var.lambda_jwt_name
 }

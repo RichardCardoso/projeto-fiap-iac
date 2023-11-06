@@ -14,3 +14,7 @@ variable "lambda_invoke_arn" {
 }
 
 variable "lambda_role_arn" {}
+
+variable "lambda_auth_invoke_arn" {}
+
+variable "lambda_auth_role_arn" {}
