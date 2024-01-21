@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projetofiap-identificacao-deployment
+  labels:
+    app: projetofiap-identificacao-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: projetofiap-identificacao-deployment
+  template:
+    metadata:
+      labels:
+        app: projetofiap-identificacao-deployment
+    spec:
+      containers:
+        - name: c-projetofiap-deployment
+          image: rm350010/projeto-fiap-1:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: opaque-app-secret
+                  key: SPRING_DATASOURCE_URL
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: opaque-app-secret
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: opaque-app-secret
+                  key: SPRING_DATASOURCE_PASSWORD
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 350m
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: projetofiap-identificacao-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: deployment
+    name: projetofiap-identificacao-deployment
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 90
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: projetofiap-identificacao-service
+spec:
+  selector:
+    app: projetofiap-identificacao-deployment
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
