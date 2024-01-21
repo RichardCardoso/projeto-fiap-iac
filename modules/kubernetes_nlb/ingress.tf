@@ -14,6 +14,13 @@ provider "helm" {
   }
 }
 
+resource "kubernetes_namespace" "ingress_nginx" {
+  metadata {
+    name = "ingress-nginx"
+  }
+}
+
+
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
   repository = "https://kubernetes.github.io/ingress-nginx"
@@ -29,6 +36,10 @@ resource "helm_release" "nginx_ingress" {
     name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-internal"
     value = "true"
   }
+
+  depends_on = [
+    kubernetes_namespace.ingress_nginx
+  ]
 
 }
 
