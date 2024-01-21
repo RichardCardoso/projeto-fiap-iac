@@ -51,7 +51,7 @@ resource "helm_release" "nginx_ingress" {
 
 data "kubernetes_service" "nginx_ingress_lb" {
   metadata {
-    name      = "projetofiap-ingress" 
+    name      = "nginx-ingress-controller" 
     namespace = "ingress-nginx"
   }
 
