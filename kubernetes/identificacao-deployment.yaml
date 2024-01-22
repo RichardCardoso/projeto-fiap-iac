@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: projetofiap-deployment
+  name: projetofiap-identificacao-deployment
   labels:
-    app: projetofiap-deployment
+    app: projetofiap-identificacao-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: projetofiap-deployment
+      app: projetofiap-identificacao-deployment
   template:
     metadata:
       labels:
-        app: projetofiap-deployment
+        app: projetofiap-identificacao-deployment
     spec:
       containers:
         - name: c-projetofiap-deployment
-          image: rm350010/projeto-fiap-1:latest
+          image: 168173199034.dkr.ecr.us-east-1.amazonaws.com/projeto-fiap-identificacao:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -45,3 +45,38 @@ spec:
           resources:
             requests:
               cpu: 350m
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: projetofiap-identificacao-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: deployment
+    name: projetofiap-identificacao-deployment
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 90
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: identificacao
+spec:
+  selector:
+    app: projetofiap-identificacao-deployment
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
