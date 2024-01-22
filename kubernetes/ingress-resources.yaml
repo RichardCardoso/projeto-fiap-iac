@@ -15,7 +15,7 @@ spec:
             name: identificacao
             port:
               number: 80
-      - path: /produtos
+      - path: /produto
         pathType: Prefix
         backend:
           service:

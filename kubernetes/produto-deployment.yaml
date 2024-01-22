@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: c-projetofiap-deployment
-          image: rm350010/projeto-fiap-1:latest
+          image: 168173199034.dkr.ecr.us-east-1.amazonaws.com/projeto-fiap-produto:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -72,7 +72,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: projetofiap-produto-service
+  name: produto
 spec:
   selector:
     app: projetofiap-produto-deployment
