@@ -51,5 +51,7 @@ resource "aws_db_instance" "default" {
 
   vpc_security_group_ids = [aws_security_group.db_security_group.id]
 
-  #publicly_accessible = true #remover antes da entrega, apenas para testes
+  timeouts {
+    delete = "30m"
+  }
 }

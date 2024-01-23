@@ -21,4 +21,8 @@ resource "aws_eks_node_group" "eks_node_group" {
     aws_iam_role_policy_attachment.eks_AmazonEC2ContainerRegistryReadOnly
   ]
 
+  timeouts {
+    delete = "30m"
+  }
+
 }
