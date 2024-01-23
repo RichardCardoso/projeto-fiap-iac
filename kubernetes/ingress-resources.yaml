@@ -29,3 +29,17 @@ spec:
             name: comanda
             port:
               number: 80
+      - path: /pedido
+        pathType: Prefix
+        backend:
+          service:
+            name: pedido
+            port:
+              number: 80
+      - path: /pagamento
+        pathType: Prefix
+        backend:
+          service:
+            name: pagamento
+            port:
+              number: 80
