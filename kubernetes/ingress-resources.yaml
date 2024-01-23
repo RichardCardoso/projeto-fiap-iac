@@ -22,3 +22,10 @@ spec:
             name: produto
             port:
               number: 80
+      - path: /comanda
+        pathType: Prefix
+        backend:
+          service:
+            name: comanda
+            port:
+              number: 80

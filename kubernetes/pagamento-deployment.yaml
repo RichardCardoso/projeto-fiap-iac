@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: projetofiap-produto-deployment
+  name: projetofiap-pagamento-deployment
   labels:
-    app: projetofiap-produto-deployment
+    app: projetofiap-pagamento-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: projetofiap-produto-deployment
+      app: projetofiap-pagamento-deployment
   template:
     metadata:
       labels:
-        app: projetofiap-produto-deployment
+        app: projetofiap-pagamento-deployment
     spec:
       containers:
         - name: c-projetofiap-deployment
-          image: 168173199034.dkr.ecr.us-east-1.amazonaws.com/projeto-fiap-produto:latest
+          image: 168173199034.dkr.ecr.us-east-1.amazonaws.com/projeto-fiap-pagamento:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -38,7 +38,7 @@ spec:
                   key: SPRING_DATASOURCE_PASSWORD
           livenessProbe:
             httpGet:
-              path: /produto/liveness
+              path: /pagamento/liveness
               port: 8080
             initialDelaySeconds: 120
             periodSeconds: 30
@@ -51,12 +51,12 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: projetofiap-produto-hpa
+  name: projetofiap-pagamento-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: deployment
-    name: projetofiap-produto-deployment
+    name: projetofiap-pagamento-deployment
   minReplicas: 1
   maxReplicas: 1
   metrics:
@@ -72,10 +72,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: produto
+  name: pagamento
 spec:
   selector:
-    app: projetofiap-produto-deployment
+    app: projetofiap-pagamento-deployment
   ports:
     - protocol: TCP
       port: 80
