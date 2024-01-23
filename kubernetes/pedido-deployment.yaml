@@ -5,7 +5,7 @@ metadata:
   labels:
     app: projetofiap-pedido-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: projetofiap-pedido-deployment
