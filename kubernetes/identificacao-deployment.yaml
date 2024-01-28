@@ -21,32 +21,6 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: SPRING_DATA_MONGODB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: opaque-app-secret
-                  key: MONGO_HOST
-            - name: SPRING_DATA_MONGODB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: opaque-app-secret
-                  key: MONGO_PORT
-            - name: SPRING_DATA_MONGODB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: opaque-app-secret
-                  key: MONGO_DATABASE
-            - name: SPRING_DATA_MONGODB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: opaque-app-secret
-                  key: MONGO_USERNAME
-            - name: SPRING_DATA_MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: opaque-app-secret
-                  key: MONGO_PASSWORD
-
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 secretKeyRef:
