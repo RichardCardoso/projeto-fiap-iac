@@ -138,23 +138,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup AWS CLI
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+  - name: Install kubeval
+    run: |
+      curl -sL https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz | tar xvz
+      sudo install kubeval /usr/local/bin
 
-    - name: Setup Kubectl CLI
-      run:  |
-            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-            kubectl version --client
-
-    - name: Setup Kubeconfig
-      run:  |
-            aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
-
-    - name: Validate kubernetes manifests
-      run:  |
-            kubectl apply -f ./kubernetes --dry-run=client
+  - name: Validate kubernetes manifests
+    run: |
+      kubeval ./kubernetes/*.yaml
