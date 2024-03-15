@@ -36,6 +36,23 @@ spec:
                 secretKeyRef:
                   name: opaque-app-secret
                   key: SPRING_DATASOURCE_PASSWORD
+
+            - name: SPRING_RABBITMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: opaque-app-secret
+                  key: RABBIT_HOST
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: opaque-app-secret
+                  key: RABBIT_USERNAME
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: opaque-app-secret
+                  key: RABBIT_PASSWORD
+
           livenessProbe:
             httpGet:
               path: /pedido/liveness
