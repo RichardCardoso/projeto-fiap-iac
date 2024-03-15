@@ -138,11 +138,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-  - name: Install kubeval
-    run: |
-      curl -sL https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz | tar xvz
-      sudo install kubeval /usr/local/bin
+    - name: Install kubeval
+      run: |
+            curl -sL https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz | tar zx
+            sudo install kubeval /usr/local/bin/
 
-  - name: Validate kubernetes manifests
-    run: |
-      kubeval ./kubernetes/*.yaml
+    - name: Validate Kubernetes manifests
+      run: |
+            kubeval ./kubernetes/*.yaml
