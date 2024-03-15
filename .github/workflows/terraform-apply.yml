@@ -26,6 +26,8 @@ env:
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+  RABBIT_USERNAME: ${{ vars.RABBIT_USERNAME }}
+  RABBIT_PASSWORD: ${{ secrets.RABBIT_PASSWORD }}
   DB_PORT: ${{ vars.DB_PORT }}
   LAMBDA_JWT_SECRET_VALUE: ${{ secrets.LAMBDA_JWT_SECRET }}
 
@@ -132,6 +134,8 @@ jobs:
         sed -i 's@SPRING_DATASOURCE_PASSWORD: .*@SPRING_DATASOURCE_PASSWORD: ${{ env.DB_PASSWORD }}@g' kubernetes/app-secret.yaml
         sed -i 's@MONGO_USERNAME: .*@MONGO_USERNAME: ${{ env.MONGO_USERNAME }}@g' kubernetes/app-secret.yaml
         sed -i 's@MONGO_PASSWORD: .*@MONGO_PASSWORD: ${{ env.MONGO_PASSWORD }}@g' kubernetes/app-secret.yaml
+        sed -i 's@RABBIT_USERNAME: .*@RABBIT_USERNAME: ${{ env.RABBIT_USERNAME }}@g' kubernetes/app-secret.yaml
+        sed -i 's@RABBIT_PASSWORD: .*@RABBIT_PASSWORD: ${{ env.RABBIT_PASSWORD }}@g' kubernetes/app-secret.yaml
         cat kubernetes/app-secret.yaml
 
     - name: Setup Kubeconfig
