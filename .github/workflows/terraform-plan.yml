@@ -145,4 +145,4 @@ jobs:
 
     - name: Validate Kubernetes manifests
       run: |
-            kubeval ./kubernetes/*.yaml
+            kubeval --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master ./kubernetes/*.yaml
